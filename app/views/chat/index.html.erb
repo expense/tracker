@@ -1,0 +1,11 @@
+
+
+<% if @response %>
+  <pre><%= @response %></pre>
+<% end %>
+
+<%= form_tag chat_path do %>
+  <%= text_field_tag :text, '', :autofocus => true %>
+<% end %>
+
+

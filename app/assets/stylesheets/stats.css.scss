@@ -1,0 +1,95 @@
+
+.cal {
+  white-space: nowrap;
+}
+
+%cal-unstyle {
+  padding: 0;
+  list-style: none;
+}
+
+%cal-inline {
+  @extend %cal-unstyle;
+  display: flex;
+  display: -webkit-flex;
+  > li {
+    display: block;
+    vertical-align: top;
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+  }
+}
+
+.cal-month {
+  @extend %cal-inline;
+  > li {
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+  }
+  > li:last-child {
+    border-right: 1px solid #ccc;
+  }
+  > li > h2 {
+    margin: 0;
+    font: 14px sans-serif;
+    border-bottom: 1px solid #ccc;
+    padding: 4px 7px;
+  }
+}
+
+.cal-week {
+  @extend %cal-inline;
+  > li:not(:first-child) {
+    border-left: 1px solid #ccc;
+  }
+}
+
+.cal-day {
+  @extend %cal-inline;
+  > li {
+    width: 4em;
+  }
+  > li > h3 {
+    margin: 0;
+    font: 14px sans-serif;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+  }
+}
+
+.cal-day--wday {
+  font-size: 1.4em;
+  display: block;
+}
+
+.cal-day--total {
+  text-align: center;
+  font: 11px sans-serif;
+  border-bottom: 1px solid #ccc;
+}
+
+.cal-item {
+  @extend %cal-unstyle;
+}
+
+
+.expense-item {
+  box-sizing: border-box;
+  overflow: hidden;
+  background: #eee;
+  box-shadow:
+    inset -1px -1px 3px -2px rgba(0,0,0,0.8),
+    inset 1px 1px 3px -2px rgba(255,255,255,0.8);
+  text-align: center;
+  padding: 3px;
+
+  &[data-category="F"] { background: #fcc; }
+  &[data-category="T"] { background: #ffa; }
+  &[data-category="G"] { background: #ccf; }
+  &[data-category="E"] { background: #cef; }
+  &[data-category="H"] { background: #fcf; }
+  &[data-category="L"] { opacity: 0.4; }
+}
+
+
+
