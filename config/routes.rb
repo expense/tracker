@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :statements
+
   resources :items
   post '/chat' => 'chat#chat'
   get '/chat' => 'chat#index'
