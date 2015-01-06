@@ -17,7 +17,7 @@ class Chat
   def handle
     case @text
     when  /\A
-            (s\s+|spend\s+|)
+            (s\s*|spend\s*|)
             (?<amount>[\d\.]+)
               (?<category>[a-z]+)?
               (?::(?<store>[a-z0-9]+))?
