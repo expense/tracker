@@ -52,6 +52,39 @@ describe Chat do
         chat "spend 100", time: time
         expect(Statement.last.time).to eq time
       end
+      it "should use specified time" do
+        time = Time.now
+        chat "spend 100 @ 1 day ago", time: time
+        expect(Statement.last.time).to eq(time - 1.day)
+      end
+    end
+
+    describe "remarks" do
+      it "should allow adding remarks" do
+        chat "spend 55t taxi"
+        expect(Statement.last).to be_command :add_expense, remark: 'taxi'
+      end
+    end
+
+    describe "combinations" do
+      it "should all work together" do
+        time = Time.now
+        options = { category_alias_t: 'transportation' }
+        chat "spend 55t:cash taxi @ 3 hours ago", options: options, time: time
+        expect(Statement.last).to be_command(:add_expense,
+          amount: 55.0,
+          store: 'cash',
+          category: 'transportation',
+          remark: 'taxi')
+        expect(Statement.last.time).to eq(time - 3.hours)
+      end
+    end
+
+    describe "shorthand" do
+      it "when text starts with number, default to spend command" do
+        chat "123"
+        expect(Statement.last).to be_command :add_expense, amount: 123.0
+      end
     end
 
   end

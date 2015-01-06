@@ -17,16 +17,19 @@ class Chat
   def handle
     case @text
     when  /\A
-            (s\s+|spend\s+)
+            (s\s+|spend\s+|)
             (?<amount>[\d\.]+)
               (?<category>[a-z]+)?
               (?::(?<store>[a-z0-9]+))?
+            (?:\s+(?<remark>[^@]+?))?
+            (?:\s*@\s*(?<time>.+))?
           \Z/ix
       Statement.make!(:add_expense,
         :amount   => $~[:amount].to_f,
         :category => category_for($~[:category]),
         :store    => store_for($~[:store]),
-        :time     => @time
+        :time     => time_for($~[:time]),
+        :remark   => $~[:remark],
       )
     else
       @response = "(unrecognized command)"
@@ -43,6 +46,11 @@ class Chat
   def store_for(text)
     return @options[:default_store] if text.blank?
     text.downcase
+  end
+
+  def time_for(text)
+    return @time if text.blank?
+    Chronic.parse(text, context: :past, now: @time) or @time
   end
 
 end
