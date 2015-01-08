@@ -31,8 +31,29 @@ class Chat
         :time     => time_for($~[:time]),
         :remark   => $~[:remark],
       )
+    when  /\A
+            (w\s*|withdraw\s*)
+            (?<amount>[\d\.]+)
+              (?:\s+(?<to>[a-z0-9]+)
+                (?:\s+(?<from>[a-z0-9]+))?
+              )?
+          \Z/ix
+      Statement.make!(:transfer,
+        :amount   => $~[:amount].to_f,
+        :to       => store_for($~[:to]),
+        :from     => $~[:from].try(:downcase),
+      )
+    when  /\A
+            undo
+          \Z/ix
+      statement = Statement.last
+      statement.destroy
+      @result = [statement]
     else
       @response = "(unrecognized command)"
+      Statement.make!(:unrecognized,
+        :message  => @text,
+      )
     end
   end
 

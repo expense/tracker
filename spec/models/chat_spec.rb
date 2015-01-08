@@ -89,4 +89,42 @@ describe Chat do
 
   end
 
+  describe "withdraw command" do
+
+    it "should withdraw to default store" do
+      chat "w100", options: { default_store: 'cash' }
+      expect(Statement.last).to be_command :transfer, amount: 100.0, to: 'cash', from: nil
+    end
+
+    it "should withdraw to specified store" do
+      chat "w100 x", options: { default_store: 'cash' }
+      expect(Statement.last).to be_command :transfer, amount: 100.0, to: 'x', from: nil
+    end
+
+    it "should withdraw from specified store" do
+      chat "w100 cash bank", options: { default_store: 'cash' }
+      expect(Statement.last).to be_command :transfer, amount: 100.0, to: 'cash', from: 'bank'
+    end
+
+  end
+
+  describe "unrecognized message" do
+
+    it "should be saved" do
+      chat "lolwut"
+      expect(Statement.last).to be_command :unrecognized, message: 'lolwut'
+    end
+
+  end
+
+  describe "undo message" do
+
+    it "should remove last command" do
+      chat "lolwut"
+      chat "undo"
+      expect(Statement.last).to eq nil
+    end
+
+  end
+
 end
